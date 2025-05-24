@@ -10,9 +10,9 @@ const generateToken = (payload) => {
 // Register user
 const registerUser = async (req, res) => {
   try {
-    const { fullName, email, password, password2 } = req.body;
+    const { name, email, password, password2 } = req.body;
 
-    if (!fullName || !email || !password || !password2) {
+    if (!name || !email || !password || !password2) {
       return res.status(422).json({ error: 'Please fill in all fields' });
     }
 
@@ -40,12 +40,12 @@ const registerUser = async (req, res) => {
 
     // Insert user
     const insertQuery = `
-      INSERT INTO users (full_name, email, password, is_admin)
+      INSERT INTO users (name, email, password, isAdmin)
       VALUES ($1, $2, $3, $4) RETURNING id
     `;
-    const result = await pool.query(insertQuery, [fullName, newEmail, hashedPassword, isAdmin]);
+    const result = await pool.query(insertQuery, [name, newEmail, hashedPassword, isAdmin]);
 
-    res.status(201).json({ message: `User ${fullName} registered successfully`, userId: result.rows[0].id });
+    res.status(201).json({ message: `User ${name} registered successfully`, userId: result.rows[0].id });
 
   } catch (error) {
     console.error('Registration error:', error);
@@ -64,7 +64,7 @@ const loginUser = async (req, res) => {
 
     const newEmail = email.toLowerCase();
 
-    const query = 'SELECT id, password, is_admin FROM users WHERE email = $1';
+    const query = 'SELECT id, password, isAdmin FROM users WHERE email = $1';
     const result = await pool.query(query, [newEmail]);
 
     if (result.rows.length === 0) {
@@ -78,12 +78,12 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const token = generateToken({ id: user.id, isAdmin: user.is_admin });
+    const token = generateToken({ id: user.id, isAdmin: user.isAdmin });
 
     res.json({
       token,
       id: user.id,
-      isAdmin: user.is_admin,
+      isAdmin: user.isAdmin,
     });
 
   } catch (error) {
