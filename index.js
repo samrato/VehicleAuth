@@ -30,6 +30,7 @@ app.use("/api", routes);
 
 const PORT = process.env.PORT || 5000;
 
+
 async function startServer() {
   try {
     // Test DB connection once on startup
