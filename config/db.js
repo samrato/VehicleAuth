@@ -9,7 +9,7 @@ const pool = new Pool({
   password: process.env.PG_PASSWORD,
   port: process.env.PG_PORT,
   ssl: {
-    rejectUnauthorized: false //Required for Render PostgreSQL
+    rejectUnauthorized: false //Required for Render PostgreSQL to c
   }
 });
 
