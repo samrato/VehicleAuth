@@ -41,14 +41,23 @@ const registerUser = async (req, res) => {
 
     const result = await pool.query(
       `INSERT INTO users (name, email, password, isadmin)
-       VALUES ($1, $2, $3, $4) RETURNING id`,
+       VALUES ($1, $2, $3, $4) RETURNING id, name, email, isadmin`,
       [name, newEmail, hashedPassword, isadmin]
     );
 
-    res.status(201).json({ message: `User ${name} registered`, userId: result.rows[0].id });
+    const user = result.rows[0];
+    res.status(201).json({
+      message: `User ${name} registered`,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        isadmin: user.isadmin,
+      },
+    });
   } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ error: 'Server error during registration' });
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
