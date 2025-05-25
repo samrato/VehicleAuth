@@ -1,7 +1,7 @@
 require('dotenv').config();
 const axios = require("axios");
 const moment = require("moment");
-
+// how to get the access token from to start the payment 
 const getAccessToken = async () => {
   const url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
   const auth = Buffer.from(`${process.env.DARAJA_CONSUMER_KEY}:${process.env.DARAJA_CONSUMER_SECRET}`).toString("base64");
@@ -26,8 +26,7 @@ const initiateStkPush = async (phone, amount) => {
 
     const token = await getAccessToken();
     const timestamp = moment().format("YYYYMMDDHHmmss");
-
-    // Use correct sandbox passkey or from env
+    
     const passkey = process.env.DARAJA_PASSKEY || "bfb279f9aa9bdbcf158e97dd71a467cd2ca2d7c";
     const password = Buffer.from(`${process.env.DARAJA_SHORTCODE}${passkey}${timestamp}`).toString("base64");
 
